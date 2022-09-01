@@ -8,9 +8,9 @@ public class UsersController : ControllerBase
 {
     private readonly IConfiguration _config;
 
-    public UsersController(IConfiguration _config)
+    public UsersController(IConfiguration config)
     {
-        _config = _config;
+        _config = config;
     }
     // GET: api/<UsersController>
     [HttpGet]
