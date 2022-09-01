@@ -6,6 +6,12 @@ namespace ApiSecurity.Controllers;
 [ApiController]
 public class UsersController : ControllerBase
 {
+    private readonly IConfiguration _config;
+
+    public UsersController(IConfiguration _config)
+    {
+        _config = _config;
+    }
     // GET: api/<UsersController>
     [HttpGet]
     public IEnumerable<string> Get()
