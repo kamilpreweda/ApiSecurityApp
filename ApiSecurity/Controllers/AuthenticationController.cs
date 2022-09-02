@@ -8,6 +8,7 @@ namespace ApiSecurity.Controllers;
 public class AuthenticationController : ControllerBase
 {
     public record AuthenticationData(string? UserName, string? Password);
+    public record UserData(int UserId, string UserName);
     [HttpPost("token")]
     public ActionResult<string> Authenticate([FromBody] Data data)
     {
@@ -16,7 +17,11 @@ public class AuthenticationController : ControllerBase
     private UserData? ValidateCredentials(AuthenticationData data)
     {
         // THIS IS NOT PRODUCTION CODE - THIS IS ONLY A DEMO - DO NOT USE IN REAL LIFE
-        
+        if(CompareValues(data.UserName, "tcorey")&&
+            CompareValues(data.Password, "Test123")){
+            return new UserData(1, data.UserName!);
+        }
+        return null;
     }
     private bool CompareValues(string? actual, string expected)
     {
