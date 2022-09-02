@@ -1,5 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace ApiSecurity.Controllers;
 
@@ -25,7 +29,8 @@ public class AuthenticationController : ControllerBase
     {
         // THIS IS NOT PRODUCTION CODE - THIS IS ONLY A DEMO - DO NOT USE IN REAL LIFE
         if(CompareValues(data.UserName, "tcorey")&&
-            CompareValues(data.Password, "Test123")){
+            CompareValues(data.Password, "Test123"))
+        {
             return new UserData(1, data.UserName!);
         }
         return null;
@@ -43,6 +48,16 @@ public class AuthenticationController : ControllerBase
     }
     private string GenerateToken(UserData user)
     {
+        var secretKey = new SymmetricSecurityKey(
+            Encoding.ASCII.GetBytes(
+                _config.GetValue<string>("Authentication:secretKey")));
+
+        var signingCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+
+        List<Claim> claims = new();
+        claims.Add(new(JwtRegisteredClaimNames.Sub, user.UserId.ToString()));
+        claims.Add(new(JwtRegisteredClaimNames.UniqueName, user.UserName));
+
 
     }
 } 
