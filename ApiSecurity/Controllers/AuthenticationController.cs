@@ -7,10 +7,17 @@ namespace ApiSecurity.Controllers;
 [ApiController]
 public class AuthenticationController : ControllerBase
 {
+    private readonly IConfiguration _config;
+
+    public AuthenticationController(IConfiguration config)
+    {
+        _config = config;
+    }
+
     public record AuthenticationData(string? UserName, string? Password);
     public record UserData(int UserId, string UserName);
     [HttpPost("token")]
-    public ActionResult<string> Authenticate([FromBody] Data data)
+    public ActionResult<string> Authenticate([FromBody] AuthenticationData data)
     {
 
     }
@@ -33,5 +40,9 @@ public class AuthenticationController : ControllerBase
                 }
         }
         return false;
+    }
+    private string GenerateToken(UserData user)
+    {
+
     }
 } 
