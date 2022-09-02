@@ -23,7 +23,15 @@ public class AuthenticationController : ControllerBase
     [HttpPost("token")]
     public ActionResult<string> Authenticate([FromBody] AuthenticationData data)
     {
+        var user = ValidateCredentials(data);
 
+        if(user is null)
+        {
+            return Unauthorized();
+        }
+
+        var token = GenerateToken(user);
+        return Ok(token);
     }
     private UserData? ValidateCredentials(AuthenticationData data)
     {
@@ -58,6 +66,14 @@ public class AuthenticationController : ControllerBase
         claims.Add(new(JwtRegisteredClaimNames.Sub, user.UserId.ToString()));
         claims.Add(new(JwtRegisteredClaimNames.UniqueName, user.UserName));
 
+        var token = new JwtSecurityToken(
+            _config.GetValue<string>("Authentication:Issuer"),
+            _config.GetValue<string>("Authentication:Audience"),
+            claims,
+            DateTime.UtcNow, //When this token becomes valid
+            DateTime.UtcNow.AddMinutes(1), //When this token will expire
+            signingCredentials);
 
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
 } 
