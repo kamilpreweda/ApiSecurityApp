@@ -29,6 +29,14 @@ builder.Services.AddAuthorization(opts =>
     {
         policy.RequireClaim("employeeId");
     });
+    opts.AddPolicy(PolicyConstants.MustBeTheOwner, policy =>
+    {
+        policy.RequireClaim("title", "Business Owner");
+    });
+    opts.AddPolicy(PolicyConstants.MustBeAVeteranEmployee, policy =>
+    {
+        policy.RequireClaim("employeeId", "E001", "E002", "E003");
+    });
     opts.FallbackPolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
 });
 

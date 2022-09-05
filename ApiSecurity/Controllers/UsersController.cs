@@ -24,6 +24,7 @@ public class UsersController : ControllerBase
     // GET api/<UsersController>/5
     [HttpGet("{id}")]
     [Authorize(Policy = PolicyConstants.MustHaveEmployeeId)]
+    [Authorize(Policy = PolicyConstants.MustBeTheOwner)]
     public string Get(int id)
     {
         return _config.GetConnectionString("Default");
