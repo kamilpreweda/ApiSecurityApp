@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using ApiSecurity.Constants;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +25,7 @@ builder.Services.AddAuthentication("Bearer").AddJwtBearer(opts =>
 });
 builder.Services.AddAuthorization(opts =>
 {
-    opts.AddPolicy("MustHaveAmpolyeeId", policy =>
+    opts.AddPolicy(PolicyConstants.MustHaveEmployeeId, policy =>
     {
         policy.RequireClaim("employeeId");
     });
