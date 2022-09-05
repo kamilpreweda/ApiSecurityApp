@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -20,6 +21,14 @@ builder.Services.AddAuthentication("Bearer").AddJwtBearer(opts =>
         ValidAudience = builder.Configuration.GetValue<string>("Authentication:Audience"),
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration.GetValue<string>("Authentication:SecretKey")))
     };
+});
+builder.Services.AddAuthorization(opts =>
+{
+    opts.AddPolicy("MustHaveAmpolyeeId", policy =>
+    {
+        policy.RequireClaim("employeeId");
+    });
+    opts.FallbackPolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
 });
 
 var app = builder.Build();
